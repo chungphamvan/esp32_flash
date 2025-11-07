@@ -259,21 +259,62 @@ function hideFlashModal() {
   resetModalState();
 }
 
-function simulateFlashProcess(firmwarePath, cardIndex) {
-  // This simulates the firmware flashing process with status updates
-  // In a real implementation, this would handle the actual ESP32 flashing
-
+async function simulateFlashProcess(firmwarePath, cardIndex) {
   // Update log with file size check
   updateLogEntry('🔍 Kích thước file: Đang kiểm tra...');
 
-  setTimeout(() => {
+  setTimeout(async () => {
     updateLogEntry('📏 Kích thước file: 1.2MB (1,228,800 bytes)');
     updateLogEntry('🔌 Đang tìm kiếm cổng serial...');
 
-    // Simulate attempting to connect to device
-    updateFlashStatus('connect', 'error', 'Lỗi: Failed to execute \'requestPort\' on \'Serial\': No port selected by the user.');
-    updateLogEntry('❌ Lỗi: Không tìm thấy thiết bị ESP32');
-    updateLogEntry('💡 Hướng dẫn: Vui lòng kết nối ESP32 và chọn cổng COM phù hợp.');
+    // Try to actually request serial port access
+    try {
+      if (!('serial' in navigator)) {
+        updateFlashStatus('connect', 'error', 'Lỗi: Trình duyệt không hỗ trợ Web Serial API. Vui lòng dùng Chrome hoặc Edge.');
+        updateLogEntry('❌ Lỗi: Trình duyệt không hỗ trợ Web Serial API');
+        return;
+      }
+
+      updateLogEntry('🔍 Yêu cầu quyền truy cập cổng serial...');
+      updateFlashStatus('connect', 'pending', 'Đang chờ người dùng chọn cổng serial...');
+
+      // Request port access - this will show the browser's port selection popup
+      const port = await navigator.serial.requestPort();
+
+      if (port) {
+        updateLogEntry('✅ Đã chọn cổng serial thành công');
+        updateFlashStatus('connect', 'success', 'Kết nối cổng serial thành công');
+
+        // Try to open the port
+        updateLogEntry('🔌 Đang kết nối với thiết bị...');
+        updateFlashStatus('flash', 'pending', 'Đang kết nối với ESP32...');
+
+        try {
+          await port.open({ baudRate: 115200 });
+          updateLogEntry('✅ Kết nối ESP32 thành công');
+          updateFlashStatus('flash', 'success', 'Sẵn sàng nạp firmware');
+
+          // Here you would implement actual firmware flashing
+          updateLogEntry('📤 Bắt đầu nạp firmware...');
+          updateLogEntry('⚠️ Tính năng nạp firmware đang được phát triển');
+          updateFlashStatus('complete', 'pending', 'Đang phát triển...');
+
+        } catch (error) {
+          updateLogEntry(`❌ Lỗi kết nối: ${error.message}`);
+          updateFlashStatus('flash', 'error', `Lỗi kết nối: ${error.message}`);
+        }
+      }
+
+    } catch (error) {
+      if (error.name === 'NotFoundError') {
+        updateFlashStatus('connect', 'error', 'Không tìm thấy thiết bị ESP32. Vui lòng kiểm tra kết nối USB.');
+        updateLogEntry('❌ Không tìm thấy thiết bị ESP32');
+      } else {
+        updateFlashStatus('connect', 'error', `Lỗi: ${error.message}`);
+        updateLogEntry(`❌ Lỗi: ${error.message}`);
+      }
+      updateLogEntry('💡 Hướng dẫn: Vui lòng kết nối ESP32 và chọn cổng COM phù hợp.');
+    }
   }, 1000);
 }
 
