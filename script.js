@@ -265,6 +265,12 @@ async function simulateFlashProcess(firmwarePath, cardIndex) {
 
   setTimeout(async () => {
     try {
+      // Check if user is on mobile device first
+      if (logMobileWarning()) {
+        updateFlashStatus('connect', 'error', 'Thiết bị di động không hỗ trợ nạp firmware ESP32');
+        return;
+      }
+
       // Load firmware file
       const firmwareData = await loadFirmwareFile(firmwarePath);
       updateLogEntry(`📏 Kích thước file: ${(firmwareData.byteLength / 1024).toFixed(1)}KB (${firmwareData.byteLength} bytes)`);
@@ -538,8 +544,97 @@ function resetModalState() {
   if (statusTabContent) statusTabContent.classList.add('active');
 }
 
+// Mobile detection and warning
+function isMobileDevice() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Check for mobile user agents
+  const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
+
+  // Check for touch capability
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  // Check screen width
+  const smallScreen = window.innerWidth <= 768;
+
+  // Check if Web Serial API is not supported (common on mobile)
+  const noWebSerial = !('serial' in navigator);
+
+  return mobileRegex.test(userAgent) || (hasTouch && smallScreen && noWebSerial);
+}
+
+function showMobileWarning() {
+  const mobileWarning = document.getElementById('mobile-warning');
+  if (mobileWarning) {
+    mobileWarning.classList.add('show');
+  }
+}
+
+function hideMobileWarning() {
+  const mobileWarning = document.getElementById('mobile-warning');
+  if (mobileWarning) {
+    mobileWarning.classList.remove('show');
+
+    // Store that user has seen the warning
+    localStorage.setItem('mobileWarningShown', 'true');
+  }
+}
+
+function initMobileWarning() {
+  // Check if user is on mobile and hasn't seen warning before
+  const hasSeenWarning = localStorage.getItem('mobileWarningShown');
+
+  if (isMobileDevice() && !hasSeenWarning) {
+    // Show warning after a brief delay
+    setTimeout(() => {
+      showMobileWarning();
+    }, 1000);
+  }
+
+  // Add event listeners for closing the warning
+  const closeBtn = document.getElementById('mobile-close-btn');
+  const understandBtn = document.getElementById('mobile-understand-btn');
+  const mobileWarning = document.getElementById('mobile-warning');
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideMobileWarning);
+  }
+
+  if (understandBtn) {
+    understandBtn.addEventListener('click', hideMobileWarning);
+  }
+
+  // Close on overlay click
+  if (mobileWarning) {
+    mobileWarning.addEventListener('click', (e) => {
+      if (e.target === mobileWarning) {
+        hideMobileWarning();
+      }
+    });
+  }
+
+  // Close with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileWarning && mobileWarning.classList.contains('show')) {
+      hideMobileWarning();
+    }
+  });
+}
+
+// Enhanced log function to warn mobile users when trying to flash
+function logMobileWarning() {
+  if (isMobileDevice()) {
+    updateLogEntry('📱 Cảnh báo: Đang sử dụng thiết bị di động');
+    updateLogEntry('⚠️ Web Serial API không khả dụng trên thiết bị di động');
+    updateLogEntry('💻 Vui lòng sử dụng máy tính với Chrome hoặc Edge');
+    return true;
+  }
+  return false;
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initModal();
+  initMobileWarning();
 });

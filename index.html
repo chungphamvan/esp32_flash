@@ -258,6 +258,40 @@
     </div>
   </div>
 
+  <!-- Mobile Warning Popup -->
+  <div id="mobile-warning" class="mobile-warning-overlay">
+    <div class="mobile-warning-content">
+      <div class="mobile-warning-header">
+        <h3>⚠️ Cảnh báo thiết bị di động</h3>
+        <button class="mobile-warning-close" id="mobile-close-btn">&times;</button>
+      </div>
+      <div class="mobile-warning-body">
+        <div class="mobile-warning-icon">📱</div>
+        <p class="mobile-warning-title">Trình duyệt không hỗ trợ cài đặt firmware ESP32</p>
+        <p class="mobile-warning-description">
+          Thiết bị di động không hỗ trợ Web Serial API cần thiết để kết nối với ESP32.
+          Để sử dụng công cụ nạp firmware, vui lòng truy cập từ máy tính với:
+        </p>
+        <div class="mobile-warning-browsers">
+          <div class="browser-item">
+            <span class="browser-icon">🌐</span>
+            <span class="browser-name">Google Chrome</span>
+          </div>
+          <div class="browser-item">
+            <span class="browser-icon">🔷</span>
+            <span class="browser-name">Microsoft Edge</span>
+          </div>
+        </div>
+        <p class="mobile-warning-note">
+          <strong>Lưu ý:</strong> Bạn vẫn có thể xem giao diện và tìm hiểu về các loại màn hình được hỗ trợ.
+        </p>
+      </div>
+      <div class="mobile-warning-footer">
+        <button class="mobile-warning-understand" id="mobile-understand-btn">Tôi đã hiểu</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
