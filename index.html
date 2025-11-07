@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ESP32-S3 Web Flasher</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="assets/logo.png" class="logo" alt="Shino Logo">
+    <h1>ESP32-S3 Web Flasher</h1>
+    <p class="desc">Công cụ nạp firmware cho ESP32-S3 trực tiếp trên trình duyệt.  
+      Kết nối bo mạch, chọn file .bin và nhấn “Flash Firmware”.</p>
+
+    <button id="connectBtn">🔌 Kết nối ESP32-S3</button>
+    <input type="file" id="firmwareFile" accept=".bin" />
+    <button id="flashBtn" disabled>⚡ Flash Firmware</button>
+
+    <div id="status"></div>
+    <progress id="progress" value="0" max="100"></progress>
+  </div>
+
+  <script src="https://unpkg.com/esptool-js@0.5.3/bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
