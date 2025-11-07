@@ -1,27 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ESP32-S3 Web Flasher</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shino ESP32-S3 Web Flasher — 1-Click</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <img src="assets/logo.png" class="logo" alt="Shino Logo">
-    <h1>ESP32-S3 Web Flasher</h1>
-    <p class="desc">Công cụ nạp firmware cho ESP32-S3 trực tiếp trên trình duyệt.  
-      Kết nối bo mạch, chọn file .bin và nhấn “Flash Firmware”.</p>
+  <div class="card">
+    <header>
+      <div class="logo">SHINO</div>
+      <div>
+        <h1>Shino Web Flasher — ESP32-S3 (1-Click)</h1>
+        <p class="lead">Tải file <code>merged-binary.bin</code> rồi nhấn <strong>Connect → Flash</strong>. Dùng Chrome hoặc Edge có hỗ trợ Web Serial API.</p>
+      </div>
+    </header>
 
-    <button id="connectBtn">🔌 Kết nối ESP32-S3</button>
-    <input type="file" id="firmwareFile" accept=".bin" />
-    <button id="flashBtn" disabled>⚡ Flash Firmware</button>
+    <section class="section">
+      <div class="row">
+        <div class="col">
+          <label for="file">Chọn firmware (merged-binary.bin)</label>
+          <input id="file" type="file" accept=".bin" />
+          <div class="hint">Nếu dùng file bootloader/partition/app riêng, hãy dùng ESP-IDF hoặc bật chế độ nâng cao.</div>
+        </div>
+        <div class="col-fixed">
+          <label for="baud">Baudrate</label>
+          <select id="baud">
+            <option value="115200">115200</option>
+            <option value="230400">230400</option>
+            <option value="460800">460800</option>
+            <option value="921600">921600</option>
+            <option value="2000000" selected>2000000</option>
+          </select>
+        </div>
+      </div>
 
-    <div id="status"></div>
-    <progress id="progress" value="0" max="100"></progress>
+      <div class="row row-spacing align-end">
+        <div class="col">
+          <label for="offset">Flash Offset (hex)</label>
+          <input id="offset" type="text" value="0x0" />
+        </div>
+        <div class="action-buttons">
+          <button id="btn-connect">Connect</button>
+          <button id="btn-flash" class="ghost" disabled>Flash</button>
+        </div>
+      </div>
+
+      <div class="block">
+        <label for="console">Console</label>
+        <pre id="console">Console ready. Use Chrome/Edge and allow access to USB device.</pre>
+      </div>
+
+      <div class="button-group">
+        <button id="btn-open-official" class="ghost">Open official esptool-js demo</button>
+        <button id="btn-erase" class="ghost" disabled>Erase Flash</button>
+      </div>
+
+      <footer>
+        <strong>Lưu ý:</strong> Trình duyệt cần hỗ trợ <em>Web Serial API</em> (Chrome/Edge).<br />
+        Nếu trang không hoạt động, hãy mở official tool:<br />
+        <code>https://espressif.github.io/esptool-js/</code>.
+      </footer>
+    </section>
   </div>
 
-  <script src="https://unpkg.com/esptool-js@0.5.3/bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
