@@ -12,37 +12,141 @@
       <div class="logo">SHINO</div>
       <div>
         <h1>Shino Web Flasher — ESP32-S3 (1-Click)</h1>
-        <p class="lead">Tải file <code>merged-binary.bin</code> rồi nhấn <strong>Connect → Flash</strong>. Dùng Chrome hoặc Edge có hỗ trợ Web Serial API.</p>
+        <p class="lead">Công cụ nạp firmware ESP32 trực tuyến với giao diện thân thiện và hỗ trợ nhiều loại màn hình.</p>
       </div>
     </header>
 
-    <section class="section">
-      <div class="row">
-        <div class="col">
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="chatbot">Xiaozhi Chatbot</button>
+      <button class="tab-btn" data-tab="manual">Cấu hình thủ công</button>
+    </div>
+
+    <!-- Xiaozhi Chatbot Tab -->
+    <section class="section tab-content active" id="chatbot-tab">
+      <div class="chatbot-header">
+        <h2>Chọn Firmware</h2>
+      </div>
+
+      <div class="chip-selection">
+        <h3>Chọn Chip</h3>
+        <select id="chip-select" class="chip-dropdown">
+          <option value="esp32-16r8">ESP32 16R8 (Có hỗ trợ mạch tím)</option>
+        </select>
+      </div>
+
+      <div class="display-selection">
+        <h3>Chọn Màn Hình OLED</h3>
+        <div class="display-cards">
+          <!-- OLED 1.54 inch TFT -->
+          <div class="display-card">
+            <div class="display-image">
+              <img src="assets/OLED 1.54 inch TFT.png" alt="OLED 1.54 inch TFT Display" class="display-photo">
+            </div>
+            <div class="card-info">
+              <h4>OLED 1.54 inch TFT</h4>
+              <p>Phiên bản cho màn hình TFT 1.54</p>
+              <p class="spec">1.54 inch 240x240</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn-flash-fw highlighted">Nạp FW</button>
+              <button class="btn-view-diagram">Xem sơ đồ</button>
+            </div>
+          </div>
+
+          <!-- TFT LCD 1.28 Inch Round -->
+          <div class="display-card">
+            <div class="display-image">
+              <img src="assets/TFT LCD 1.28 Inch 240 * 240 GC9A01.png" alt="TFT LCD 1.28 Inch Round Display" class="display-photo">
+            </div>
+            <div class="card-info">
+              <h4>TFT LCD 1.28 Inch GC9A01</h4>
+              <p>Phiên bản cho màn hình TFT LCD tròn 1.28 inch</p>
+              <p class="spec">1.28 inch 240x240</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn-flash-fw highlighted">Nạp FW</button>
+              <button class="btn-view-diagram">Xem sơ đồ</button>
+            </div>
+          </div>
+
+          <!-- OLED 0.96 inch 128X64 -->
+          <div class="display-card">
+            <div class="display-image">
+              <img src="assets/OLED 0.96 inch 128X64.png" alt="OLED 0.96 inch 128X64 Display" class="display-photo">
+            </div>
+            <div class="card-info">
+              <h4>OLED 0.96 inch 128X64</h4>
+              <p>Phiên bản cho màn hình OLED 0.96 inch</p>
+              <p class="spec">0.96 inch 128x64</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn-flash-fw highlighted">Nạp FW</button>
+              <button class="btn-view-diagram">Xem sơ đồ</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer for Xiaozhi Chatbot Tab -->
+      <footer class="tab-footer">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>📞 Liên hệ hỗ trợ</h4>
+            <p><strong>Shino Pham</strong></p>
+            <a href="https://www.facebook.com/shinopham1992" target="_blank" class="footer-link">
+              📘 Facebook: facebook.com/shinopham1992
+            </a>
+          </div>
+          <div class="footer-section">
+            <h4>🔧 Hỗ trợ kỹ thuật</h4>
+            <p>• Tư vấn lựa chọn màn hình phù hợp</p>
+            <p>• Hướng dẫn cài đặt firmware</p>
+            <p>• Giải quyết lỗi kết nối ESP32</p>
+          </div>
+          <div class="footer-section">
+            <h4>⚡ ESP32 Web Flasher</h4>
+            <p>• Công cụ nạp firmware trực tuyến</p>
+            <p>• Hỗ trợ nhiều loại màn hình</p>
+            <p>• Tương thích Chrome/Edge</p>
+          </div>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Manual Configuration Tab -->
+    <section class="section tab-content" id="manual-tab">
+      <div class="manual-section">
+        <div class="manual-intro">
+          <p class="intro-text">Tải file <code>merged-binary.bin</code> rồi nhấn <strong>Connect → Flash</strong>. Dùng Chrome hoặc Edge có hỗ trợ Web Serial API.</p>
+        </div>
+
+        <div class="file-selection">
           <label for="file">Chọn firmware (merged-binary.bin)</label>
           <input id="file" type="file" accept=".bin" />
           <div class="hint">Nếu dùng file bootloader/partition/app riêng, hãy dùng ESP-IDF hoặc bật chế độ nâng cao.</div>
         </div>
-        <div class="col-fixed">
-          <label for="baud">Baudrate</label>
-          <select id="baud">
-            <option value="115200">115200</option>
-            <option value="230400">230400</option>
-            <option value="460800">460800</option>
-            <option value="921600">921600</option>
-            <option value="2000000" selected>2000000</option>
-          </select>
-        </div>
-      </div>
 
-      <div class="row row-spacing align-end">
-        <div class="col">
-          <label for="offset">Flash Offset (hex)</label>
-          <input id="offset" type="text" value="0x0" />
-        </div>
-        <div class="action-buttons">
-          <button id="btn-connect">Connect</button>
-          <button id="btn-flash" class="ghost" disabled>Flash</button>
+        <div class="config-row">
+          <div class="config-item">
+            <label for="baud">Baudrate</label>
+            <select id="baud">
+              <option value="115200">115200</option>
+              <option value="230400">230400</option>
+              <option value="460800">460800</option>
+              <option value="921600">921600</option>
+              <option value="2000000" selected>2000000</option>
+            </select>
+          </div>
+          <div class="config-item offset-item">
+            <label for="offset">Flash Offset (hex)</label>
+            <input id="offset" type="text" value="0x0" />
+          </div>
+          <div class="action-buttons">
+            <button id="btn-connect">Connect</button>
+            <button id="btn-flash" class="ghost" disabled>Flash</button>
+          </div>
         </div>
       </div>
 
@@ -61,7 +165,97 @@
         Nếu trang không hoạt động, hãy mở official tool:<br />
         <code>https://espressif.github.io/esptool-js/</code>.
       </footer>
+
+      <!-- Footer for Manual Configuration Tab -->
+      <footer class="tab-footer">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>📞 Liên hệ hỗ trợ</h4>
+            <p><strong>Shino Pham</strong></p>
+            <a href="https://www.facebook.com/shinopham1992" target="_blank" class="footer-link">
+              📘 Facebook: facebook.com/shinopham1992
+            </a>
+          </div>
+          <div class="footer-section">
+            <h4>🛠️ Chế độ nâng cao</h4>
+            <p>• Tùy chỉnh địa chỉ flash offset</p>
+            <p>• Điều chỉnh tốc độ baudrate</p>
+            <p>• Upload firmware tùy chọn</p>
+          </div>
+          <div class="footer-section">
+            <h4>📖 Hướng dẫn sử dụng</h4>
+            <p>• Bước 1: Chọn file firmware (.bin)</p>
+            <p>• Bước 2: Kết nối ESP32 qua USB</p>
+            <p>• Bước 3: Nhấn Connect và Flash</p>
+          </div>
+        </div>
+      </footer>
     </section>
+
+    <!-- Flash Firmware Modal -->
+    <div id="flash-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Đang nạp firmware</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+
+        <!-- Modal Tab Navigation -->
+        <div class="modal-tab-navigation">
+          <button class="modal-tab-btn active" data-modal-tab="status">Trạng thái</button>
+          <button class="modal-tab-btn" data-modal-tab="log">Log</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Status Tab -->
+          <div class="modal-tab-content active" id="status-tab">
+            <div class="flash-status">
+              <div class="status-item error">
+                <span class="status-icon">✗</span>
+                <div class="status-content">
+                  <div class="status-title">Kết nối thiết bị</div>
+                  <div class="status-message">Lỗi: Failed to execute 'requestPort' on 'Serial': No port selected by the user.</div>
+                </div>
+              </div>
+              <div class="status-item pending">
+                <span class="status-icon">⏳</span>
+                <div class="status-content">
+                  <div class="status-title">Nạp firmware</div>
+                  <div class="status-message">Chờ kết nối...</div>
+                </div>
+              </div>
+              <div class="status-item pending">
+                <span class="status-icon">⏳</span>
+                <div class="status-content">
+                  <div class="status-title">Hoàn thành</div>
+                  <div class="status-message">Chờ...</div>
+                </div>
+              </div>
+            </div>
+            <div class="progress-section">
+              <h4>Tiến trình tổng thể</h4>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Log Tab -->
+          <div class="modal-tab-content" id="log-tab">
+            <div class="log-section">
+              <h4>Chi tiết quá trình</h4>
+              <div class="log-console">
+                <div class="log-entry">💡 Khởi tạo quá trình nạp firmware...</div>
+                <div class="log-entry">📁 Đọc file firmware: xiaozhi_esp32_ST7789_240x240.bin</div>
+                <div class="log-entry">🔍 Kích thước file: Đang kiểm tra...</div>
+                <div class="log-entry">🔌 Đang tìm kiếm cổng serial...</div>
+                <div class="log-entry error">❌ Lỗi: Không tìm thấy thiết bị ESP32</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
