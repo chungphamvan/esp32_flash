@@ -140,14 +140,21 @@ $('btn-open-official').addEventListener('click', () => {
 
 log('💡 Sẵn sàng — nhấn Connect để bắt đầu.');
 
-// Tab functionality
+// Tab functionality with layout stability
 function initTabs() {
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
+  const card = document.querySelector('.card');
 
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const targetTab = button.getAttribute('data-tab');
+
+      // Store current card height to prevent layout jump
+      if (card) {
+        const currentHeight = card.offsetHeight;
+        card.style.minHeight = `${currentHeight}px`;
+      }
 
       // Remove active class from all tabs and contents
       tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -159,6 +166,13 @@ function initTabs() {
       if (targetContent) {
         targetContent.classList.add('active');
       }
+
+      // Reset min-height after content loads
+      setTimeout(() => {
+        if (card) {
+          card.style.minHeight = '';
+        }
+      }, 300);
     });
   });
 }
@@ -632,9 +646,209 @@ function logMobileWarning() {
   return false;
 }
 
+// Wiring Diagram Modal Functionality
+function initWiringDiagram() {
+  const wiringModal = document.getElementById('wiring-modal');
+  const wiringModalClose = document.getElementById('wiring-modal-close');
+  const wiringModalTitle = document.getElementById('wiring-modal-title');
+  const wiringDiagramImage = document.getElementById('wiring-diagram-image');
+  const wiringInstructionsContainer = document.getElementById('wiring-instructions-container');
+
+  // Wiring diagrams data
+  const wiringDiagrams = [
+    {
+      title: 'ESP32-S3 + OLED 1.54inch TFT + MAX98357A + INMP441 - Sơ đồ đấu nối',
+      image: 'assets/Wiring diagram/OLED 1.54 inch TFT/OLED 1.54 inch TFT.JPG',
+      components: [
+        {
+          name: '📺 TFT 1.54 INCH ST7789',
+          icon: '📺',
+          connections: [
+            ['GND', 'GND'],
+            ['VCC', '3.3V'],
+            ['SCL', 'GPIO21'],
+            ['SDA', 'GPIO47'],
+            ['RES', 'GPIO45'],
+            ['DC', 'GPIO40'],
+            ['CS', 'GPIO41'],
+            ['BLK', 'GPIO42']
+          ]
+        },
+        {
+          name: '🔊 MAX98357A Audio Amplifier',
+          icon: '🔊',
+          connections: [
+            ['LRC', 'GPIO16'],
+            ['BCLK', 'GPIO15'],
+            ['DIN', 'GPIO7'],
+            ['GAIN', 'GND'],
+            ['SD', '3.3V'],
+            ['GND', 'GND'],
+            ['VIN', '3.3V']
+          ]
+        },
+        {
+          name: '🎤 Microphone INMP441',
+          icon: '🎤',
+          connections: [
+            ['SD', 'GPIO6'],
+            ['VDD', '3.3V'],
+            ['GND', 'GND'],
+            ['SCK', 'GPIO5'],
+            ['WS', 'GPIO4'],
+            ['L/R', 'GND']
+          ]
+        }
+      ]
+    },
+    {
+      title: 'TFT LCD 1.28 Inch GC9A01 - Sơ đồ đấu nối',
+      image: '',
+      toBeUpdated: true,
+      message: 'TO BE UPDATED!'
+    },
+    {
+      title: 'OLED 0.96 inch 128X64 - Sơ đồ đấu nối',
+      image: '',
+      toBeUpdated: true,
+      message: 'TO BE UPDATED!'
+    }
+  ];
+
+  // Add click event listeners to all "Xem sơ đồ" buttons
+  const viewDiagramButtons = document.querySelectorAll('.btn-view-diagram');
+  viewDiagramButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      if (index < wiringDiagrams.length) {
+        showWiringDiagram(wiringDiagrams[index]);
+      }
+    });
+  });
+
+  function showWiringDiagram(diagram) {
+    wiringModalTitle.textContent = diagram.title;
+    wiringDiagramImage.src = diagram.image;
+    wiringDiagramImage.alt = diagram.title;
+
+    // Clear container
+    wiringInstructionsContainer.innerHTML = '';
+
+    // Handle "TO BE UPDATED" case
+    if (diagram.toBeUpdated) {
+      const updateMessage = document.createElement('div');
+      updateMessage.style.cssText = `
+        text-align: center;
+        padding: 60px 20px;
+        background: rgba(255, 193, 7, 0.1);
+        border: 2px solid rgba(255, 193, 7, 0.3);
+        border-radius: 12px;
+        margin: 20px 0;
+      `;
+      updateMessage.innerHTML = `
+        <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
+        <div style="font-size: 24px; font-weight: bold; color: #ffc107; margin-bottom: 12px;">${diagram.message}</div>
+        <div style="font-size: 16px; color: #e6eef8; opacity: 0.8;">Sơ đồ đấu nối cho thiết bị này sẽ được cập nhật sớm.</div>
+      `;
+      wiringInstructionsContainer.appendChild(updateMessage);
+
+      // Hide the image container if no image
+      if (!diagram.image) {
+        document.querySelector('.wiring-diagram-container').style.display = 'none';
+      }
+    }
+    // Handle new component-based structure or legacy instructions
+    else if (diagram.components) {
+      // Show the image container for component-based diagrams
+      document.querySelector('.wiring-diagram-container').style.display = 'block';
+      diagram.components.forEach(component => {
+        // Create component section
+        const section = document.createElement('div');
+        section.className = 'component-section';
+
+        // Create component title
+        const title = document.createElement('div');
+        title.className = 'component-title';
+        title.textContent = component.name;
+        section.appendChild(title);
+
+        // Create table
+        const table = document.createElement('table');
+        table.className = 'wiring-table';
+
+        // Create table header
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        const th1 = document.createElement('th');
+        th1.textContent = component.name.replace(/^[📺🔊🎤]\s*/, '');
+        const th2 = document.createElement('th');
+        th2.textContent = 'ESP32-S3';
+        headerRow.appendChild(th1);
+        headerRow.appendChild(th2);
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
+        component.connections.forEach(connection => {
+          const row = document.createElement('tr');
+          const td1 = document.createElement('td');
+          td1.textContent = connection[0];
+          const td2 = document.createElement('td');
+          td2.textContent = connection[1];
+          row.appendChild(td1);
+          row.appendChild(td2);
+          tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+
+        section.appendChild(table);
+        wiringInstructionsContainer.appendChild(section);
+      });
+    } else if (diagram.instructions) {
+      // Fallback for legacy format
+      document.querySelector('.wiring-diagram-container').style.display = 'block';
+      const ul = document.createElement('ul');
+      diagram.instructions.forEach(instruction => {
+        const li = document.createElement('li');
+        li.textContent = instruction;
+        ul.appendChild(li);
+      });
+      wiringInstructionsContainer.appendChild(ul);
+    }
+
+    wiringModal.style.display = 'flex';
+  }
+
+  function hideWiringDiagram() {
+    wiringModal.style.display = 'none';
+  }
+
+  // Close button event listener
+  if (wiringModalClose) {
+    wiringModalClose.addEventListener('click', hideWiringDiagram);
+  }
+
+  // Close on overlay click
+  if (wiringModal) {
+    wiringModal.addEventListener('click', (e) => {
+      if (e.target === wiringModal) {
+        hideWiringDiagram();
+      }
+    });
+  }
+
+  // Close with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && wiringModal && wiringModal.style.display === 'flex') {
+      hideWiringDiagram();
+    }
+  });
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initModal();
   initMobileWarning();
+  initWiringDiagram();
 });

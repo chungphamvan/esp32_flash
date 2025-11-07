@@ -145,7 +145,8 @@
           </div>
           <div class="action-buttons">
             <button id="btn-connect">Connect</button>
-            <button id="btn-flash" class="ghost" disabled>Flash</button>
+            <div class="button-arrow">→</div>
+            <button id="btn-flash" class="flash-btn" disabled>Flash</button>
           </div>
         </div>
       </div>
@@ -252,6 +253,27 @@
                 <div class="log-entry error">❌ Lỗi: Không tìm thấy thiết bị ESP32</div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wiring Diagram Modal -->
+  <div id="wiring-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="wiring-modal-title">Sơ đồ đấu nối</h3>
+        <button class="modal-close" id="wiring-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="wiring-diagram-container">
+          <img id="wiring-diagram-image" src="" alt="Wiring Diagram" class="wiring-diagram-image">
+        </div>
+        <div class="wiring-instructions">
+          <h4>Hướng dẫn đấu nối:</h4>
+          <div id="wiring-instructions-container">
+            <!-- Instructions will be populated by JavaScript -->
           </div>
         </div>
       </div>

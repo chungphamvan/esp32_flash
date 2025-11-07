@@ -30,6 +30,7 @@ body {
   padding: 22px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(8px);
+  transition: height 0.3s ease, min-height 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -37,6 +38,9 @@ body {
     padding: 16px;
     margin: 16px;
     max-width: calc(100% - 32px);
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -213,10 +217,23 @@ footer {
 /* Tab Content */
 .tab-content {
   display: none;
+  min-height: 500px;
 }
 
 .tab-content.active {
   display: block;
+}
+
+@media (max-width: 768px) {
+  .tab-content {
+    min-height: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-content {
+    min-height: 800px;
+  }
 }
 
 /* Chatbot Tab Styles */
@@ -254,11 +271,21 @@ footer {
 
 @media (max-width: 768px) {
   .display-selection {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
   }
 
   .display-selection h3 {
-    margin: 0 0 24px 0;
+    margin: 0 0 30px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .display-selection {
+    margin-bottom: 60px;
+  }
+
+  .display-selection h3 {
+    margin: 0 0 36px 0;
   }
 }
 
@@ -267,13 +294,15 @@ footer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
+  align-items: stretch;
 }
 
 @media (max-width: 768px) {
   .display-cards {
     grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 0 8px;
+    gap: 40px;
+    padding: 0 12px;
+    margin-bottom: 30px;
   }
 }
 
@@ -286,13 +315,72 @@ footer {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 300px;
 }
 
 @media (max-width: 768px) {
   .display-card {
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 24px;
+    margin-bottom: 32px;
     min-height: auto;
+    border-radius: 16px;
+  }
+}
+
+/* Extra spacing for very small mobile screens like iPhone */
+@media (max-width: 480px) {
+  .display-card {
+    margin-bottom: 60px !important;
+    padding: 20px;
+    transform: translateZ(0);
+    position: relative;
+  }
+
+  .display-cards {
+    gap: 60px !important;
+    padding: 0 16px;
+    margin-bottom: 60px !important;
+  }
+}
+
+/* iPhone specific fixes */
+@media only screen
+  and (device-width: 393px)
+  and (device-height: 852px)
+  and (-webkit-device-pixel-ratio: 3) {
+
+  .display-card {
+    margin-bottom: 80px !important;
+    padding: 24px !important;
+    margin-top: 20px !important;
+  }
+
+  .display-cards {
+    gap: 80px !important;
+    padding: 20px !important;
+    margin-bottom: 80px !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-appearance: none) {
+  @media (max-width: 480px) {
+    .display-card {
+      margin-bottom: 80px !important;
+      clear: both;
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .display-cards {
+      display: block !important;
+      gap: unset !important;
+    }
+
+    .display-card + .display-card {
+      margin-top: 80px !important;
+    }
   }
 }
 
@@ -648,6 +736,25 @@ footer {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+/* iOS flexbox fixes */
+@supports (-webkit-appearance: none) {
+  @media (max-width: 480px) {
+    .card-info {
+      flex: none !important;
+      display: block !important;
+      margin-bottom: 20px !important;
+    }
+
+    .display-card {
+      display: block !important;
+      flex-direction: unset !important;
+      height: auto !important;
+    }
+  }
 }
 
 .card-info h4 {
@@ -669,7 +776,8 @@ footer {
   color: #06b6d4 !important;
   font-weight: 500;
   margin-top: auto !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 0px !important;
+  align-self: flex-end;
 }
 
 .card-actions {
@@ -1052,9 +1160,46 @@ footer {
 
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
   margin-left: 0;
+}
+
+.button-arrow {
+  font-size: 20px;
+  color: #9fb6d9;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.flash-btn {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.flash-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #16a34a, #15803d);
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.flash-btn:disabled {
+  background: linear-gradient(90deg, #6b7280, #4b5563);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.flash-btn:disabled + .button-arrow,
+#btn-connect:disabled + .button-arrow {
+  color: #6b7280;
 }
 
 @media (max-width: 768px) {
@@ -1078,16 +1223,36 @@ footer {
     margin-left: 0;
     justify-content: flex-start;
     margin-top: 8px;
+    gap: 16px;
   }
+
+  .button-arrow {
+    font-size: 18px;
+  }
+}
 }
 
 /* Tab Footer Styles */
 .tab-footer {
-  margin-top: 60px;
-  padding: 24px;
+  margin-top: 80px;
+  padding: 32px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+/* Desktop and large screen footer spacing */
+@media (min-width: 1024px) {
+  .tab-footer {
+    margin-top: 100px;
+    padding: 40px;
+    margin-bottom: 60px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .footer-content {
@@ -1135,9 +1300,109 @@ footer {
   }
 
   .tab-footer {
-    margin-top: 40px;
+    margin-top: 60px;
     padding: 20px;
     margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-footer {
+    margin-top: 80px;
+    margin-bottom: 24px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+  }
+}
+
+/* Wiring Diagram Modal Styles */
+.wiring-diagram-container {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.wiring-diagram-image {
+  max-width: 100%;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.wiring-instructions {
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.wiring-instructions h4 {
+  color: #06b6d4;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+}
+
+.component-section {
+  margin-bottom: 24px;
+}
+
+.component-title {
+  color: #06b6d4;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  padding: 8px 12px;
+  background: rgba(6, 182, 212, 0.15);
+  border-left: 3px solid #06b6d4;
+  border-radius: 4px;
+}
+
+.wiring-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.wiring-table th {
+  background: rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.wiring-table td {
+  padding: 10px 12px;
+  color: #e6eef8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.wiring-table tr:last-child td {
+  border-bottom: none;
+}
+
+.wiring-table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 768px) {
+  .wiring-diagram-image {
+    max-height: 300px;
+  }
+
+  .wiring-instructions {
+    padding: 16px;
   }
 }
 
